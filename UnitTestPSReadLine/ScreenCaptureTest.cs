@@ -17,7 +17,7 @@ namespace UnitTestPSReadLine
         public void TestCaptureScreen()
         {
             TestSetup(KeyMode.Cmd,
-                new KeyHandler("Ctrl+Z", PSConsoleReadLine.CaptureScreen));
+                new KeyHandler("Ctrl+z", PSConsoleReadLine.CaptureScreen));
 
             var line  = new [] {"echo alpha", "echo beta", "echo phi", "echo rho"};
             Test(line[0], Keys(line[0], _.CtrlZ, _.Enter, _.Enter));

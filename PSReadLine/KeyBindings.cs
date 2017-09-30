@@ -79,25 +79,12 @@ namespace Microsoft.PowerShell
         {
             public bool Equals(ConsoleKeyInfo x, ConsoleKeyInfo y)
             {
-                // We *must not* compare the KeyChar field as its value is platform-dependent.
-                // We compare exactly the ConsoleKey enum field (which is platform-agnostic)
-                // and the modifiers.
-
-                return x.Key == y.Key && x.Modifiers == y.Modifiers;
+                return Keys.EqualsNormalized(x, y);
             }
 
             public int GetHashCode(ConsoleKeyInfo obj)
             {
-                // Because a comparison of two ConsoleKeyInfo objects is a comparison of the
-                // combination of the ConsoleKey and Modifiers, we must combine their hashes.
-                // Note that if the ConsoleKey is default, we must fall back to the KeyChar,
-                // otherwise every non-special key will compare as the same.
-                int h1 = obj.Key == default(ConsoleKey)
-                    ? obj.KeyChar.GetHashCode()
-                    : obj.Key.GetHashCode();
-                int h2 = obj.Modifiers.GetHashCode();
-                // This is based on Tuple.GetHashCode
-                return unchecked(((h1 << 5) + h1) ^ h2);
+                return Keys.GetHashCode(obj);
             }
         }
 
@@ -113,7 +100,7 @@ namespace Microsoft.PowerShell
         }
 
         private Dictionary<ConsoleKeyInfo, KeyHandler> _dispatchTable;
-        private Dictionary<ConsoleKeyInfo, Dictionary<ConsoleKeyInfo, KeyHandler>> _chordDispatchTable; 
+        private Dictionary<ConsoleKeyInfo, Dictionary<ConsoleKeyInfo, KeyHandler>> _chordDispatchTable;
 
         /// <summary>
         /// Helper to set bindings based on EditMode
@@ -149,8 +136,8 @@ namespace Microsoft.PowerShell
                 { Keys.CtrlRightArrow,         MakeKeyHandler(NextWord,                  "NextWord") },
                 { Keys.ShiftLeftArrow,         MakeKeyHandler(SelectBackwardChar,        "SelectBackwardChar") },
                 { Keys.ShiftRightArrow,        MakeKeyHandler(SelectForwardChar,         "SelectForwardChar") },
-                { Keys.ShiftCtrlLeftArrow,     MakeKeyHandler(SelectBackwardWord,        "SelectBackwardWord") },
-                { Keys.ShiftCtrlRightArrow,    MakeKeyHandler(SelectNextWord,            "SelectNextWord") },
+                { Keys.CtrlShiftLeftArrow,     MakeKeyHandler(SelectBackwardWord,        "SelectBackwardWord") },
+                { Keys.CtrlShiftRightArrow,    MakeKeyHandler(SelectNextWord,            "SelectNextWord") },
                 { Keys.UpArrow,                MakeKeyHandler(PreviousHistory,           "PreviousHistory") },
                 { Keys.DownArrow,              MakeKeyHandler(NextHistory,               "NextHistory") },
                 { Keys.Home,                   MakeKeyHandler(BeginningOfLine,           "BeginningOfLine") },
@@ -162,9 +149,6 @@ namespace Microsoft.PowerShell
                 { Keys.CtrlSpace,              MakeKeyHandler(MenuComplete,              "MenuComplete") },
                 { Keys.Tab,                    MakeKeyHandler(TabCompleteNext,           "TabCompleteNext") },
                 { Keys.ShiftTab,               MakeKeyHandler(TabCompletePrevious,       "TabCompletePrevious") },
-                { Keys.VolumeDown,             MakeKeyHandler(Ignore,                    "Ignore") },
-                { Keys.VolumeUp,               MakeKeyHandler(Ignore,                    "Ignore") },
-                { Keys.VolumeMute,             MakeKeyHandler(Ignore,                    "Ignore") },
                 { Keys.CtrlA,                  MakeKeyHandler(SelectAll,                 "SelectAll") },
                 { Keys.CtrlC,                  MakeKeyHandler(CopyOrCancelLine,          "CopyOrCancelLine") },
                 { Keys.CtrlShiftC,             MakeKeyHandler(Copy,                      "Copy") },
@@ -282,9 +266,6 @@ namespace Microsoft.PowerShell
                 { Keys.AltPeriod,       MakeKeyHandler(YankLastArg,          "YankLastArg") },
                 { Keys.AltUnderbar,     MakeKeyHandler(YankLastArg,          "YankLastArg") },
                 { Keys.AltCtrlY,        MakeKeyHandler(YankNthArg,           "YankNthArg") },
-                { Keys.VolumeDown,      MakeKeyHandler(Ignore,               "Ignore") },
-                { Keys.VolumeUp,        MakeKeyHandler(Ignore,               "Ignore") },
-                { Keys.VolumeMute,      MakeKeyHandler(Ignore,               "Ignore") },
                 { Keys.PageUp,          MakeKeyHandler(ScrollDisplayUp,      "ScrollDisplayUp") },
                 { Keys.CtrlPageUp,      MakeKeyHandler(ScrollDisplayUpLine,  "ScrollDisplayUpLine") },
                 { Keys.PageDown,        MakeKeyHandler(ScrollDisplayDown,    "ScrollDisplayDown") },

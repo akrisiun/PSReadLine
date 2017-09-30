@@ -12,14 +12,14 @@ namespace UnitTestPSReadLine
         public void TestKeyInfoConverterSimpleCharLiteral()
         {
             var result = ConsoleKeyChordConverter.Convert("x");
-            Assert.IsNotNull(result);            
+            Assert.IsNotNull(result);
             Assert.AreEqual(result.Length, 1);
 
             var key = result[0];
 
             Assert.AreEqual(key.KeyChar, 'x');
             Assert.AreEqual(key.Key, ConsoleKey.X);
-            Assert.AreEqual(key.Modifiers, (ConsoleModifiers)0);            
+            Assert.AreEqual(key.Modifiers, (ConsoleModifiers)0);
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace UnitTestPSReadLine
 
         [TestMethod]
         [ExcludeFromCodeCoverage]
-        [ExpectedException(typeof(ArgumentException))]        
+        [ExpectedException(typeof(ArgumentException))]
         public void TestKeyInfoConverterInvalidKey()
         {
             ConsoleKeyChordConverter.Convert("escrape");

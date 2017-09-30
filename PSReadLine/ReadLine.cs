@@ -421,6 +421,13 @@ namespace Microsoft.PowerShell
 
         void ProcessOneKey(ConsoleKeyInfo key, Dictionary<ConsoleKeyInfo, KeyHandler> dispatchTable, bool ignoreIfNoAction, object arg)
         {
+            // Our dispatch tables are built as much as possible in a portable way, so for example,
+            // we avoid depending on scan codes like ConsoleKey.Oem6 and instead look at the
+            // ConsoleKeyInfo.Key. We also want to ignore the shift state as that may differ on
+            // different keyboard layouts.
+            //
+            // That said, we first look up exactly what we get from Console.ReadKey - that will fail
+            // most of the time, and when it does, we normalize the key.
             if (!dispatchTable.TryGetValue(key, out var handler))
             {
                 // If we see a control character where Ctrl wasn't used but shift was, treat that like

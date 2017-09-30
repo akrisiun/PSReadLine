@@ -49,7 +49,7 @@ namespace UnitTestPSReadLine
         [TestMethod]
         public void TestKillRegion()
         {
-            TestSetup(KeyMode.Emacs, new KeyHandler("Ctrl+Z", PSConsoleReadLine.KillRegion));
+            TestSetup(KeyMode.Emacs, new KeyHandler("Ctrl+z", PSConsoleReadLine.KillRegion));
 
             Test("echo foobar", Keys("bar", _.CtrlAt, "echo foo", _.CtrlZ, _.Home, _.CtrlY));
         }
@@ -175,7 +175,7 @@ namespace UnitTestPSReadLine
         public void TestShellKillWord()
         {
             TestSetup(KeyMode.Emacs,
-                new KeyHandler("Alt+D", PSConsoleReadLine.ShellKillWord));
+                new KeyHandler("Alt+d", PSConsoleReadLine.ShellKillWord));
 
             Test("echo  defabc", Keys(
                 _.AltD, // Test on empty input
@@ -207,7 +207,7 @@ namespace UnitTestPSReadLine
         public void TestExchangePointAndMark()
         {
             TestSetup(KeyMode.Emacs,
-                      new KeyHandler("Ctrl+Z", PSConsoleReadLine.ExchangePointAndMark));
+                      new KeyHandler("Ctrl+z", PSConsoleReadLine.ExchangePointAndMark));
 
             var exchangePointAndMark = _.CtrlZ;
             var setMark = _.CtrlAt;
@@ -293,10 +293,10 @@ namespace UnitTestPSReadLine
                 _.AltPeriod, _.AltPeriod, _.AltMinus, _.AltPeriod, _.AltPeriod));
 
             // Somewhat silly test to make sure invalid args are handled reasonably.
-            TestSetup(KeyMode.Emacs, new[] {new KeyHandler("Ctrl+Z", (key,arg) => PSConsoleReadLine.YankLastArg(null, "zz"))});
+            TestSetup(KeyMode.Emacs, new[] {new KeyHandler("Ctrl+z", (key,arg) => PSConsoleReadLine.YankLastArg(null, "zz"))});
             SetHistory("echo a", "echo a");
-            TestMustDing("", Keys(_.CtrlZ)); 
-            TestMustDing("a", Keys(_.AltPeriod, _.CtrlZ)); 
+            TestMustDing("", Keys(_.CtrlZ));
+            TestMustDing("a", Keys(_.AltPeriod, _.CtrlZ));
         }
 
         [TestMethod]
@@ -309,7 +309,7 @@ namespace UnitTestPSReadLine
 
             ExecuteOnSTAThread(() => Clipboard.SetText("pastetest2"));
             Test("echo pastetest2", Keys(
-                "echo foobar", _.ShiftCtrlLeftArrow, _.CtrlV));
+                "echo foobar", _.CtrlShiftLeftArrow, _.CtrlV));
         }
 
         [TestMethod]
@@ -319,7 +319,7 @@ namespace UnitTestPSReadLine
 
             ExecuteOnSTAThread(() => Clipboard.SetText(""));
             Test("", Keys(
-                "cuttest1", _.ShiftCtrlLeftArrow, _.CtrlX));
+                "cuttest1", _.CtrlShiftLeftArrow, _.CtrlX));
             AssertClipboardTextIs("cuttest1");
         }
 
@@ -335,7 +335,7 @@ namespace UnitTestPSReadLine
 
             ExecuteOnSTAThread(() => Clipboard.SetText(""));
             Test("echo copytest2", Keys(
-                "echo copytest2", _.ShiftCtrlLeftArrow, _.CtrlShiftC));
+                "echo copytest2", _.CtrlShiftLeftArrow, _.CtrlShiftC));
             AssertClipboardTextIs("copytest2");
         }
 
@@ -346,7 +346,7 @@ namespace UnitTestPSReadLine
 
             ExecuteOnSTAThread(() => Clipboard.SetText(""));
             Test("echo copytest2", Keys(
-                "echo copytest2", _.ShiftCtrlLeftArrow, _.CtrlC));
+                "echo copytest2", _.CtrlShiftLeftArrow, _.CtrlC));
             AssertClipboardTextIs("copytest2");
 
             Test("", Keys("oops", _.CtrlC,
@@ -388,7 +388,7 @@ namespace UnitTestPSReadLine
             TestSetup(KeyMode.Cmd);
 
             Test("echo bar", Keys(
-                "echo foo bar", _.CtrlLeftArrow, _.ShiftCtrlLeftArrow,
+                "echo foo bar", _.CtrlLeftArrow, _.CtrlShiftLeftArrow,
                 CheckThat(() => AssertScreenIs(1,
                     TokenClassification.Command, "echo",
                     TokenClassification.None, " ",
@@ -402,7 +402,7 @@ namespace UnitTestPSReadLine
             TestSetup(KeyMode.Cmd);
 
             Test("echo bar", Keys(
-                "foo echo bar", _.Home, _.ShiftCtrlRightArrow,
+                "foo echo bar", _.Home, _.CtrlShiftRightArrow,
                 CheckThat(() => AssertScreenIs(1,
                     TokenClassification.Command, Inverted, "foo",
                     TokenClassification.None, Inverted, " ", Inverted,
@@ -426,7 +426,7 @@ namespace UnitTestPSReadLine
         [TestMethod]
         public void TestSelectShellForwardWord()
         {
-            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+Z", PSConsoleReadLine.SelectShellForwardWord));
+            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+z", PSConsoleReadLine.SelectShellForwardWord));
 
             Test(" echo bar", Keys(
                 "a\\b\\c echo bar", _.Home, _.CtrlZ,
@@ -439,7 +439,7 @@ namespace UnitTestPSReadLine
         [TestMethod]
         public void TestSelectShellNextWord()
         {
-            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+Z", PSConsoleReadLine.SelectShellNextWord));
+            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+z", PSConsoleReadLine.SelectShellNextWord));
 
             Test("echo bar", Keys(
                 "a\\b\\c echo bar", _.Home, _.CtrlZ,
@@ -453,7 +453,7 @@ namespace UnitTestPSReadLine
         [TestMethod]
         public void TestSelectShellBackwardWord()
         {
-            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+Z", PSConsoleReadLine.SelectShellBackwardWord));
+            TestSetup(KeyMode.Cmd, new KeyHandler("Ctrl+z", PSConsoleReadLine.SelectShellBackwardWord));
 
             Test("echo bar ", Keys(
                 "echo bar 'a b c'", _.CtrlZ,
